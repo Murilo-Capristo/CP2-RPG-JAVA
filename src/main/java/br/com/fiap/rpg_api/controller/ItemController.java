@@ -41,7 +41,7 @@ public class ItemController {
         repository.delete(getItem(id));
     }
 
-    @PutMapping
+    @PutMapping("{id}")
     public Item update(@PathVariable Long id, @RequestBody Item item){
         getItem(id);
         item.setId(id);

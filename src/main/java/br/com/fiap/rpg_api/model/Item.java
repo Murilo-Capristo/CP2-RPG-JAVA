@@ -36,6 +36,7 @@ public class Item {
     private Double preco;
 
     @ManyToOne
+    @JoinColumn(name = "personagem_id", nullable = true)
     private  Personagem personagem;
 
     public void setId(Long id){

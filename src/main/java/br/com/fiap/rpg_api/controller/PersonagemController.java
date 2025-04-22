@@ -1,6 +1,8 @@
 package br.com.fiap.rpg_api.controller;
 
+import br.com.fiap.rpg_api.model.Item;
 import br.com.fiap.rpg_api.model.Personagem;
+import br.com.fiap.rpg_api.repository.ItemRepository;
 import br.com.fiap.rpg_api.repository.PersonagemRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,8 @@ public class PersonagemController {
 
     @Autowired
     private PersonagemRepository repository;
+    @Autowired
+    private ItemRepository itemRepository;
 
     @GetMapping
     public List<Personagem> index(){
@@ -37,7 +41,13 @@ public class PersonagemController {
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void destroy(@PathVariable Long id){
-        repository.delete(getPersonagem(id));
+        Personagem personagem = getPersonagem(id);
+        List<Item> itens = itemRepository.findByPersonagem(personagem);
+        for (Item item : itens){
+            item.setPersonagem(null);
+            itemRepository.save(item);
+        }
+        repository.delete(personagem);
     }
 
     @PutMapping("{id}")
