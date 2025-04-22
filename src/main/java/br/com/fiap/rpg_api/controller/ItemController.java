@@ -12,7 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/items")
+@RequestMapping("/itens")
 
 public class ItemController {
 
@@ -30,7 +30,7 @@ public class ItemController {
         return repository.save(item);
     }
 
-    @GetMapping
+    @GetMapping("{id}")
     public Item get(@PathVariable Long id){
         return getItem(id);
     }

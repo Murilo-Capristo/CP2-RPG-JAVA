@@ -5,20 +5,17 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
 @Entity
+@Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class Personagem {
 
     @Id
@@ -31,10 +28,15 @@ public class Personagem {
     @NotNull
     private Classe classe;
 
-    @NotBlank
-    @Size(min=1, max = 99)
-    private Integer nivel;
+    @NotNull
+    @Min(1)
+    @Max(99)
+    private int nivel;
 
-    @NotBlank
-    private Integer moedas;
+    @NotNull
+    private int moedas;
+
+    public void setId(Long id){
+        this.id = id;
+    }
 }
