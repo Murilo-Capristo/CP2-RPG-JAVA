@@ -48,6 +48,17 @@ public class ItemController {
         return repository.save(item);
     }
 
+    @GetMapping
+    public List<Item> searchByPriceRange(
+            @RequestParam Double precoMinimo,
+            @RequestParam Double precoMaximo
+    ){
+        if (precoMinimo > precoMaximo){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Preço mínimo não pode ser maior que o preço máximo.");
+        }
+        return repository.findByPrecoBetween(precoMinimo, precoMaximo);
+    }
+
 
     private Item getItem(Long id){
         return repository
