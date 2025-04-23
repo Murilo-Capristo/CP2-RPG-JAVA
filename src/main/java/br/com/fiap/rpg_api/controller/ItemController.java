@@ -1,10 +1,15 @@
 package br.com.fiap.rpg_api.controller;
 
 import br.com.fiap.rpg_api.model.Item;
+import br.com.fiap.rpg_api.model.ItemFilter;
 import br.com.fiap.rpg_api.model.Personagem;
 import br.com.fiap.rpg_api.repository.ItemRepository;
+import br.com.fiap.rpg_api.specification.ItemSpecification;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -20,8 +25,8 @@ public class ItemController {
     private ItemRepository repository;
 
     @GetMapping
-    public List<Item> index(){
-        return repository.findAll();
+    public Page<Item> index(ItemFilter filter, @PageableDefault(size = 10, sort = "id") Pageable pageable) {
+        return repository.findAll(ItemSpecification.withFilters(filter), pageable);
     }
 
     @PostMapping
@@ -46,17 +51,6 @@ public class ItemController {
         getItem(id);
         item.setId(id);
         return repository.save(item);
-    }
-
-    @GetMapping
-    public List<Item> searchByPriceRange(
-            @RequestParam Double precoMinimo,
-            @RequestParam Double precoMaximo
-    ){
-        if (precoMinimo > precoMaximo){
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Preço mínimo não pode ser maior que o preço máximo.");
-        }
-        return repository.findByPrecoBetween(precoMinimo, precoMaximo);
     }
 
 

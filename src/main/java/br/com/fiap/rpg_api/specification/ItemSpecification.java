@@ -3,7 +3,7 @@ package br.com.fiap.rpg_api.specification;
 import br.com.fiap.rpg_api.model.Item;
 import br.com.fiap.rpg_api.model.ItemFilter;
 import org.springframework.data.jpa.domain.Specification;
-
+import br.com.fiap.rpg_api.model.Personagem;
 import java.util.ArrayList;
 import java.util.List;
 import jakarta.persistence.criteria.Predicate;
@@ -27,13 +27,24 @@ public class ItemSpecification {
 
             }
             if (filter.tipo() != null) {
-                predicades.add(cb.like(
-                        cb.lower(root.get("tipo")), "%" + filter.tipo() + "%"));
+                predicades.add(cb.equal(root.get("tipo"), filter.tipo()));
             }
+
             if (filter.raridade() != null) {
-                predicades.add(cb.like(
-                        cb.lower(root.get("raridade")), "%" + filter.raridade() + "%"));
+                predicades.add(cb.equal(root.get("raridade"), filter.raridade()));
             }
+
+
+
+            if(filter.precoMinimo() != null &&filter.precoMaximo() != null) {
+                predicades.add(cb.between(root.get("preco"), filter.precoMinimo(), filter.precoMaximo()));
+            } else if(filter.precoMinimo() != null) {
+                predicades.add(cb.greaterThanOrEqualTo(root.get("preco"), filter.precoMinimo()));
+            } else if(filter.precoMaximo() != null) {
+                predicades.add(cb.lessThanOrEqualTo(root.get("preco"), filter.precoMaximo()));
+            }
+
+
             var arrayPredicades = predicades.toArray(new Predicate[0]);
 
             return cb.and(arrayPredicades);

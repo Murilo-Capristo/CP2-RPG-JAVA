@@ -2,8 +2,10 @@ package br.com.fiap.rpg_api.controller;
 
 import br.com.fiap.rpg_api.model.Item;
 import br.com.fiap.rpg_api.model.Personagem;
+import br.com.fiap.rpg_api.model.PersonagemFilter;
 import br.com.fiap.rpg_api.repository.ItemRepository;
 import br.com.fiap.rpg_api.repository.PersonagemRepository;
+import br.com.fiap.rpg_api.specification.PersonagemSpecification;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,8 +25,9 @@ public class PersonagemController {
     private ItemRepository itemRepository;
 
     @GetMapping
-    public List<Personagem> index(){
-        return repository.findAll();
+    public List<Personagem> index(@ModelAttribute PersonagemFilter filter){
+        System.out.println("Filtro recebido: " + filter);
+        return repository.findAll(PersonagemSpecification.withFilters(filter));
     }
 
     @PostMapping
